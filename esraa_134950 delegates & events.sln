@@ -1,25 +1,66 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36511.14 d17.14
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "esraa_134950 delegates & events", "esraa_134950 delegates & events\esraa_134950 delegates & events.csproj", "{3F467560-B1CC-42E8-B69C-9BA6A2361200}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3F467560-B1CC-42E8-B69C-9BA6A2361200}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F467560-B1CC-42E8-B69C-9BA6A2361200}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F467560-B1CC-42E8-B69C-9BA6A2361200}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F467560-B1CC-42E8-B69C-9BA6A2361200}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E09911BB-4234-4476-B186-79423DAE5D0C}
-	EndGlobalSection
-EndGlobal
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace esraa_134950_delegates___events
+{
+    // تعريف التفويض (Delegate) الخاص بحالة الجهاز
+    public delegate void DeviceStatusDelegate(string deviceName, string newStatus);
+
+    // الكلاس الأساسي المجرد (Abstract Class) للأجهزة
+    public abstract class Appliance
+    {
+        // خاصية مجردة يجب تطبيقها في الكلاسات الوراثية
+        public abstract string DeviceName { get; set; }
+
+        private string status;
+
+        // الحدث الذي يتم استدعاؤه عند تغير الحالة
+        public event DeviceStatusDelegate DeviceStatusChange;
+
+        // الخاصية المسؤولة عن مراقبة وتحديث الحالة
+        public string Status
+        {
+            get => status;
+            set
+            {
+                if (status != value)
+                {
+                    status = value;
+                    // استدعاء الحدث بشكل آمن
+                    DeviceStatusChange?.Invoke(DeviceName, status);
+                }
+            }
+        }
+    }
+
+    // مثال على كلاس فرعي يرث من Appliance
+    public class AirConditioner : Appliance
+    {
+        public override string DeviceName { get; set; } = "المكيف";
+    }
+
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            // إنشاء كائن من الجهاز
+            AirConditioner ac = new AirConditioner();
+
+            // الاشتراك في الحدث
+            ac.DeviceStatusChange += (name, newStatus) =>
+            {
+                Console.WriteLine($"تنبيه: تغيرت حالة الجهاز [{name}] وأصبحت: [{newStatus}]");
+            };
+
+            // تجربة تغيير الحالة
+            ac.Status = "يعمل";
+            ac.Status = "يعمل";
+            ac.Status = "متوقف";
+
+            Console.ReadKey();
+        }
+    }
+}
