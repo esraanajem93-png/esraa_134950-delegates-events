@@ -278,6 +278,7 @@ namespace HomeApplianceRepairCenter
 .6. مستودع المشروع على GitHub
 تم رفع المشروع البرمجي بالكامل، مع إضافة جميع أعضاء الفريق الخمسة كمساهمين (Collaborators)، وتوثيق سجل المساهمات (Commits) لكل طالب:
 🔗 رابط المستودع:
+https://github.com/esraanajem93-png/esraa_134950-delegates-events
 
 
 
